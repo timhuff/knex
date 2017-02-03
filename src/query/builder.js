@@ -229,7 +229,7 @@ assign(Builder.prototype, {
           if(statement.grouping != 'where')
             throw new Error('You passed a query builder into appendWhere() that had'+
               ' a non-where clause on it.');
-          _this._statements.push(statement);
+          _this._statements.push(clone(statement));
         };
       })(this));
       return this;
@@ -300,7 +300,7 @@ assign(Builder.prototype, {
   orWhere: function orWhere() {
     this._bool('or');
     const obj = arguments[0];
-    if(isObject(obj) && !isFunction(obj) && !(obj instanceof Raw)) {
+    if(isObject(obj) && !isFunction(obj) && !(obj instanceof Raw) && !(obj instanceof Builder)) {
       return this.whereWrapped(function() {
         for(const key in obj) {
           this.andWhere(key, obj[key]);
